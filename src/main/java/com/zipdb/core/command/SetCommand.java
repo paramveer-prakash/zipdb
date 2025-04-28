@@ -19,6 +19,6 @@ public class SetCommand implements Command {
         String key = args[0];
         String value = args[1];
         dataStore.set(key, new StringType(value));
-        return "+OK\r\n";
+        return "OK";
     }
 }

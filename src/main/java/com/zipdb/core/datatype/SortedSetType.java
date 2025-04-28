@@ -59,4 +59,8 @@ public class SortedSetType implements DataType {
                 .forEach(result::addAll);
         return result;
     }
+
+    public Map<String, Double> getAllMembers() {
+        return memberScoreMap;  // returns the internal member-score map
+    }
 }

@@ -1,5 +1,6 @@
 package com.zipdb.core.datatype;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -36,5 +37,9 @@ public class HashType implements DataType {
 
     public int size() {
         return hash.size();
+    }
+
+    public Map<String, String> getFields() {
+        return hash;
     }
 }

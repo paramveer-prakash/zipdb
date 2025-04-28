@@ -39,6 +39,6 @@ public class ZAddCommand implements Command {
         }
 
         sortedSet.add(member, score);
-        return ":1\r\n";  // Returns number of elements added (simplified)
+        return ":1";  // Returns number of elements added (simplified)
     }
 }
