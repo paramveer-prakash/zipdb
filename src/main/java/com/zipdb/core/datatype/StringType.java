@@ -1,9 +1,11 @@
 package com.zipdb.core.datatype;
 
+import java.io.Serializable;
+
 /**
  * Represents a simple key-value string type.
  */
-public class StringType implements DataType {
+public class StringType implements DataType, Serializable {
 
     private String value;
 

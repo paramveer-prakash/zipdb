@@ -1,31 +1,43 @@
 package com.zipdb.core;
 
 import com.zipdb.core.datatype.DataType;
+import com.zipdb.core.eviction.EvictionCache;
+import com.zipdb.core.eviction.LRUCache;
+import com.zipdb.core.eviction.LFUCache;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Represents the in-memory data store.
- */
 public class DataStore {
 
     private final ConcurrentHashMap<String, DataType> store = new ConcurrentHashMap<>();
-    private Map<String, Long> expirationTimes = new HashMap<>();  // To store expiration times
+    private final Map<String, Long> expirationTimes = new HashMap<>();
+    private final EvictionCache evictionCache;  // Use interface for eviction cache
+
+    // Constructor allows selecting eviction policy
+    public DataStore(int cacheSize, boolean useLFU) {
+        if (useLFU) {
+            this.evictionCache = new LFUCache(cacheSize);  // Use LFU cache
+        } else {
+            this.evictionCache = new LRUCache(cacheSize);  // Default to LRU cache
+        }
+    }
 
     public void set(String key, DataType value) {
         store.put(key, value);
+        evictionCache.set(key, value);  // Add to eviction cache
         expirationTimes.remove(key);
     }
 
     public DataType get(String key) {
         if (isExpired(key)) {
-            remove(key);  // Automatically remove expired keys
+            remove(key);
             return null;
         }
-        return store.get(key);
+
+        return evictionCache.get(key);  // Retrieve from eviction cache
     }
 
     public boolean exists(String key) {
@@ -34,15 +46,21 @@ public class DataStore {
 
     public void delete(String key) {
         store.remove(key);
+        evictionCache.remove(key);  // Remove from eviction cache
     }
 
     public Map<String, DataType> getAllEntries() {
         return store;
     }
 
+    public Set<String> getAllKeys() {
+        return store.keySet();
+    }
+
     public void remove(String key) {
         store.remove(key);
         expirationTimes.remove(key);
+        evictionCache.remove(key);
     }
 
     public void setExpiration(String key, long expirationTime) {
@@ -53,9 +71,4 @@ public class DataStore {
         Long expirationTime = expirationTimes.get(key);
         return expirationTime != null && System.currentTimeMillis() > expirationTime;
     }
-
-    public Set<String> getAllKeys() {
-        return store.keySet();  // Assuming 'store' is a map holding the data
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.zipdb.core.command;
 
+import com.zipdb.core.AuditLog;
 import com.zipdb.core.DataStore;
 import com.zipdb.core.command.bloom.BFAddCommand;
 import com.zipdb.core.command.bloom.BFExistsCommand;
@@ -46,6 +47,8 @@ public class CommandProcessor {
     }
 
     public Object process(String inputLine) {
+        AuditLog.logAction("User1", inputLine);
+
         String[] tokens = inputLine.trim().split("\\s+");
         if (tokens.length == 0) {
             return new RespError("empty command");
@@ -70,6 +73,9 @@ public class CommandProcessor {
     }
 
     public Object processWithoutWAL(String inputLine) {
+
+        AuditLog.logAction("User1", inputLine);
+
         String[] tokens = inputLine.trim().split("\\s+");
         if (tokens.length == 0) {
             return new RespError("empty command");
