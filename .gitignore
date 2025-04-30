@@ -43,6 +43,9 @@ bin/
 
 .idea/
 
+dump.rdb
 dump.rdp
 audit.log
 wal.log
+cert.pem
+Key.pem

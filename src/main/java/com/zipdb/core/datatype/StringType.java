@@ -25,4 +25,12 @@ public class StringType implements DataType, Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof StringType){
+            return ((StringType) obj).value.equals(this.value);
+        }
+        return false;
+    }
 }

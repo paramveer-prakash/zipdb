@@ -35,7 +35,7 @@ public class RESPHandler extends SimpleChannelInboundHandler<String[]> {
         } else if (result instanceof String) {
             return "+" + result + "\r\n";
         } else {
-            return "-ERR unknown response type\r\n";
+            return "ERR unknown response type\r\n";
         }
     }
 
